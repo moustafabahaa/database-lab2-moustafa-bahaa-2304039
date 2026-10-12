@@ -1,7 +1,9 @@
 # Lab 2: Login & To-Do Application
 
 ## Team
-- Moustafa Bahaa, ID: 2304039 (did everything: database, back end, front end)
+- Moustafa Bahaa, ID: 2304039
+- Hassan Ashraf ID: 2304026
+
 
 ## Technology
 - Back end: Python 3 + Flask
