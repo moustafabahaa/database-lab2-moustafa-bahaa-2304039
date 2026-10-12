@@ -27,9 +27,6 @@
 - R9 bcrypt hashes, parameterized queries only, user_id comes from the session
 - R10 Bootstrap UI, responsive, friendly empty-list message
 
-## Screenshots
-See the `screenshots` folder: register with errors, login, list with a done to-do, phone-sized window.
-
 ## Answers
 **(a)** UPDATE and DELETE contain `AND user_id = ?` so a user can only change their own to-dos. The to-do id comes from the browser, so anybody can send another user's id. Without the condition, one user could edit or delete other users' to-dos.
 
