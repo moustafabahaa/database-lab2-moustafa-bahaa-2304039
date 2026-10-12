@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}My To-Dos{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">To-Do</h1>
+    <div>
+        <span class="me-2">Hi, {{ session['name'] }}</span>
+        <a class="btn btn-outline-secondary btn-sm" href="/logout">Log out</a>
+    </div>
+</div>
+
+{% if errors %}
+<div class="alert alert-danger">
+    <ul class="mb-0">{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+<form method="POST" action="/todos/add" class="d-flex gap-2 mb-3" novalidate>
+    <input class="form-control" type="text" name="title" placeholder="What needs to be done?">
+    <button class="btn btn-primary" type="submit">Add</button>
+</form>
+
+{% if todos %}
+{% for t in todos %}
+<div class="d-flex align-items-center gap-2 mb-2">
+    <form method="POST" action="/todos/{{ t.todo_id }}/toggle">
+        <input type="hidden" name="is_done" value="{{ 0 if t.is_done else 1 }}">
+        <button class="btn btn-sm {{ 'btn-success' if t.is_done else 'btn-outline-secondary' }}" type="submit">
+            {{ '✓' if t.is_done else '○' }}
+        </button>
+    </form>
+    <form method="POST" action="/todos/{{ t.todo_id }}/edit" class="d-flex gap-2 flex-grow-1" novalidate>
+        <input class="form-control {{ 'text-decoration-line-through text-muted' if t.is_done }}"
+               type="text" name="title" value="{{ t.title }}">
+        <button class="btn btn-outline-primary btn-sm" type="submit">Save</button>
+    </form>
+    <form method="POST" action="/todos/{{ t.todo_id }}/delete"
+          onsubmit="return confirm('Are you sure?');">
+        <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+    </form>
+</div>
+{% endfor %}
+{% else %}
+<p class="text-muted text-center mt-4">No to-dos yet. Add your first one above!</p>
+{% endif %}
+{% endblock %}
