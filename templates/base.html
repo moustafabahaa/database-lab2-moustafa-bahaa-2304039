@@ -8,7 +8,55 @@
 </head>
 <body class="bg-light">
     <div class="container py-4" style="max-width: 600px;">
+        <div id="js-errors"></div>
         {% block content %}{% endblock %}
     </div>
+
+    <script>
+    document.addEventListener("submit", function (e) {
+        var f = e.target;
+        var action = f.getAttribute("action");
+        var errors = [];
+
+        function val(name) {
+            return f.elements[name] ? f.elements[name].value : "";
+        }
+
+        if (action === "/register") {
+            if (!val("name").trim()) errors.push("Name is required");
+            if (!val("email").trim()) errors.push("Email is required");
+            if (!val("password")) errors.push("Password is required");
+            if (!val("confirm_password")) errors.push("Confirm password is required");
+            if (val("password") && val("confirm_password") &&
+                val("password") !== val("confirm_password")) {
+                errors.push("Passwords do not match");
+            }
+        } else if (action === "/login") {
+            if (!val("email").trim()) errors.push("Email is required");
+            if (!val("password")) errors.push("Password is required");
+        } else if (action === "/todos/add" || /\/edit$/.test(action || "")) {
+            var title = val("title").trim();
+            if (!title) errors.push("Title is required");
+            else if (title.length > 200) errors.push("Title is too long (200 characters at most)");
+        }
+
+        if (errors.length) {
+            e.preventDefault();
+            document.querySelectorAll(".alert-danger").forEach(function (a) { a.remove(); });
+            var box = document.getElementById("js-errors");
+            var div = document.createElement("div");
+            div.className = "alert alert-danger";
+            var ul = document.createElement("ul");
+            ul.className = "mb-0";
+            errors.forEach(function (m) {
+                var li = document.createElement("li");
+                li.textContent = m;
+                ul.appendChild(li);
+            });
+            div.appendChild(ul);
+            box.appendChild(div);
+        }
+    });
+    </script>
 </body>
 </html>
